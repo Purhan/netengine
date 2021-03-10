@@ -1,9 +1,8 @@
+import json
 import os
 import unittest
-import json
 
 from netengine.utils import parse_manufacturers
-
 
 __all__ = ['TestParseManufacturers']
 

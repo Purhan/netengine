@@ -1,6 +1,6 @@
-import os
 import json
-import urllib2
+import os
+from urllib.request import urlopen
 
 
 def parse_manufacturers():
@@ -9,7 +9,9 @@ def parse_manufacturers():
     and converts it to a python dictionary
     """
     dictionary = {}
-    manufacturer_file = urllib2.urlopen("https://standards.ieee.org/develop/regauth/oui/oui.txt")
+    manufacturer_file = urlopen(
+        "https://standards.ieee.org/develop/regauth/oui/oui.txt"
+    )
     for line in manufacturer_file.readlines():
         if "(hex)" in line:
             pairs = []

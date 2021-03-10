@@ -1,9 +1,8 @@
-import unittest
 import json
+import unittest
 
-from netengine.utils import manufacturer_lookup
 from netengine.exceptions import NetEngineError
-
+from netengine.utils import manufacturer_lookup
 
 __all__ = ['TestManufacturerLookup']
 

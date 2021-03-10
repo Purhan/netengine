@@ -1,10 +1,9 @@
-import unittest
 import json
+import unittest
 from collections import OrderedDict
 
 from netengine.shortcuts import OrderedDict
 from netengine.utils.iwconfig import IwConfig
-
 
 __all__ = ['TestIwConfigParser']
 
@@ -100,15 +99,18 @@ setup00   no wireless extensions."""
         self.assertEqual(len(i[0]['wireless'].keys()), 7)
         self.assertEqual(i[0]['mac'], '00:12:0E:B8:92:AF')
         self.assertEqual(i[0]['name'], 'wlan0')
-        self.assertEqual(i[0]['wireless'], {
-            "bitrate": "0 kb/s",
-            "encryption": False,
-            "essid": "ExampleWifi",
-            "frag_threshold": "off",
-            "mode": "ap",
-            "rts_threshold": "off",
-            "standard": "802.11g"
-        })
+        self.assertEqual(
+            i[0]['wireless'],
+            {
+                "bitrate": "0 kb/s",
+                "encryption": False,
+                "essid": "ExampleWifi",
+                "frag_threshold": "off",
+                "mode": "ap",
+                "rts_threshold": "off",
+                "standard": "802.11g",
+            },
+        )
 
     def test_bug_1(self):
         output = """wlan0     IEEE 802.11abgn  ESSID:"eduroam"

@@ -5,20 +5,22 @@ Class to extract information from  OpenWRT devices
 __all__ = ['OpenWRT']
 
 
-from netengine.backends.ssh import SSH
 import json
+
+from netengine.backends.ssh import SSH
 
 
 class OpenWRT(SSH):
     """
     OpenWRT SSH backend
     """
+
     _ubus_dict = {}
     _iwinfo_dict = {}
 
     def __str__(self):
         """ print a human readable object description """
-        return u"<SSH (OpenWRT): %s@%s>" % (self.username, self.host)
+        return "<SSH (OpenWRT): %s@%s>" % (self.username, self.host)
 
     @property
     def name(self):
@@ -76,7 +78,7 @@ class OpenWRT(SSH):
     @property
     def interfaces_to_dict(self):
         for interface in self._ubus_interface_infos:
-            for key, values in interface.iteritems():
+            for key, values in list(interface.items()):
                 self.ubus_dict[interface["l3_device"]][str(key)] = values
         return self.ubus_dict
 
@@ -95,7 +97,9 @@ class OpenWRT(SSH):
     @property
     def wireless_mode(self):
         """ retrieve wireless mode (AP/STA) """
-        output = self.run("iwconfig 2>/dev/null | grep Mode | awk '{print $4}' | awk -F ':' '{print $2}'")
+        output = self.run(
+            "iwconfig 2>/dev/null | grep Mode | awk '{print $4}' | awk -F ':' '{print $2}'"
+        )
         output = output.strip()
 
         if output == "Master":
@@ -122,14 +126,14 @@ class OpenWRT(SSH):
         returns a string representing the manufacturer of the device
         """
         # try to determine eth0 macaddress if exist
-        if 'eth0' in self.ubus_dict.keys():
-                mac_address = self.ubus_dict['eth0']['macaddr']
-                manufacturer = self.get_manufacturer(mac_address)
-                if manufacturer:
-                    return manufacturer
+        if 'eth0' in list(self.ubus_dict.keys()):
+            mac_address = self.ubus_dict['eth0']['macaddr']
+            manufacturer = self.get_manufacturer(mac_address)
+            if manufacturer:
+                return manufacturer
 
         # eth0 doesn't exist, use the first not None value
-        for interface in self.ubus_dict.keys():
+        for interface in list(self.ubus_dict.keys()):
             # ignore loopback interface
             if interface != "lo":
                 mac_address = self.ubus_dict[interface]['macaddr']
@@ -158,10 +162,10 @@ class OpenWRT(SSH):
         dictionary = {}
         result = iwinfo_result.split("\t")
         dictionary["Station"] = result[0].strip()
-        key  = result[1::2]
-        value  = result[2::2]
+        key = result[1::2]
+        value = result[2::2]
         try:
-            for i in range (0, len(key)):
+            for i in range(0, len(key)):
                 dictionary[key[i].strip()] = str(value[i].strip())
         except Exception:
             pass
@@ -186,7 +190,7 @@ class OpenWRT(SSH):
         dictionary[key] = value
         for line in lines[1:]:
             if line.count(": ") == 2:
-                partial =  line.strip().split("  ")
+                partial = line.strip().split("  ")
                 for element in partial:
                     key = element.split(":")[0].lower().replace(" ", "-")
                     value = element.split(":")[1].strip()
@@ -209,24 +213,23 @@ class OpenWRT(SSH):
         results = []
         olsr = self.olsr
         if olsr:
-            results.append(self._dict({
-                "name" : "olsr",
-                "version" : olsr[0]
-            }))
+            results.append(self._dict({"name": "olsr", "version": olsr[0]}))
         return results
 
     def to_dict(self):
-        return self._dict({
-            "name": self.name,
-            "type": "radio",
-            "os": self.os[0],
-            "os_version": self.os[1],
-            "manufacturer": self.manufacturer,
-            "model": self.model,
-            "RAM_total": self.RAM_total,
-            "uptime": self.uptime,
-            "uptime_tuple": self.uptime_tuple,
-            "interfaces": self.interfaces_to_dict,
-            "antennas": [],
-            "routing_protocols": self._filter_routing_protocols()
-        })
+        return self._dict(
+            {
+                "name": self.name,
+                "type": "radio",
+                "os": self.os[0],
+                "os_version": self.os[1],
+                "manufacturer": self.manufacturer,
+                "model": self.model,
+                "RAM_total": self.RAM_total,
+                "uptime": self.uptime,
+                "uptime_tuple": self.uptime_tuple,
+                "interfaces": self.interfaces_to_dict,
+                "antennas": [],
+                "routing_protocols": self._filter_routing_protocols(),
+            }
+        )

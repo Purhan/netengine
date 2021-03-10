@@ -5,12 +5,10 @@ from netengine.backends.ssh import AirOS
 
 from ..settings import settings
 
-
 __all__ = ['TestSSHAirOS']
 
 
 class TestSSHAirOS(unittest.TestCase):
-
     def setUp(self):
         self.host = settings['airos-ssh']['host']
         self.username = settings['airos-ssh']['username']
@@ -58,6 +56,6 @@ class TestSSHAirOS(unittest.TestCase):
         self.assertTrue(type(device.get_ipv6_of_interface('eth0')) in [str, type(None)])
         self.assertTrue(type(device.get_ipv6_of_interface('wrong')) is type(None))
         device.disconnect()
-    
+
     def test_uptime(self):
         self.assertIs(type(self.device.uptime), int)

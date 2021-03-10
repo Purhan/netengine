@@ -1,5 +1,5 @@
-import re
 import json
+import re
 
 from netengine.shortcuts import OrderedDict
 
@@ -14,7 +14,7 @@ class IwConfig(object):
         'Repeater': 'wds',
         'Secondary': 'wds',
         'Monitor': 'mon',
-        'Auto': 'auto'
+        'Auto': 'auto',
     }
 
     def __init__(self, output):
@@ -33,7 +33,9 @@ class IwConfig(object):
         # first line is special, split it in parts,
         # use double whitespace as delimeter
         # strip extra whitespace at beginning and end, discard empty strings
-        first_line_parts = [part.strip() for part in lines[0].split('  ') if part.strip()]
+        first_line_parts = [
+            part.strip() for part in lines[0].split('  ') if part.strip()
+        ]
         result['name'] = first_line_parts[0]
         result['ieee'] = first_line_parts[1].replace('IEEE ', '')
         result['essid'] = first_line_parts[2].replace('ESSID:', '').replace('"', '')
@@ -47,7 +49,7 @@ class IwConfig(object):
                 if ':' not in group and '=' not in group:
                     # move current group in next group
                     index = groups.index(group)
-                    groups[index+1] = '%s %s' % (group, groups[index+1])
+                    groups[index + 1] = '%s %s' % (group, groups[index + 1])
                     # skip to next iteration
                     continue
                 # split keys & values (use = or : as delimeter)
@@ -69,22 +71,28 @@ class IwConfig(object):
         """ convert to netjson format """
         result = []
         for i in self.interfaces:
-            wireless = OrderedDict((
-                ('bitrate', i.get('bit_rate')),
-                ('standard', i.get('ieee')),
-                ('essid', i.get('essid')),
-                ('mode', self.MODE_MAP.get(i['mode'])),
-                ('rts_threshold', i.get('rts_thr')),
-                ('frag_threshold', i.get('fragment_thr'))
-            ))
+            wireless = OrderedDict(
+                (
+                    ('bitrate', i.get('bit_rate')),
+                    ('standard', i.get('ieee')),
+                    ('essid', i.get('essid')),
+                    ('mode', self.MODE_MAP.get(i['mode'])),
+                    ('rts_threshold', i.get('rts_thr')),
+                    ('frag_threshold', i.get('fragment_thr')),
+                )
+            )
             if 'encryption_key' in i:
                 wireless['encryption'] = i['encryption_key'] != 'off'
 
-            result.append(OrderedDict((
-                ('name', i['name']),
-                ('mac', i['access_point']),
-                ('wireless', wireless)
-            )))
+            result.append(
+                OrderedDict(
+                    (
+                        ('name', i['name']),
+                        ('mac', i['access_point']),
+                        ('wireless', wireless),
+                    )
+                )
+            )
         # can return both python and json
         if python:
             return result

@@ -1,14 +1,13 @@
 import unittest
+
 from netengine.backends.snmp import OpenWRT
 
 from ..settings import settings
-
 
 __all__ = ['TestSNMPOpenWRT']
 
 
 class TestSNMPOpenWRT(unittest.TestCase):
-
     def setUp(self):
         self.host = settings['openwrt-snmp']['host']
         self.community = settings['openwrt-snmp']['community']
@@ -65,7 +64,9 @@ class TestSNMPOpenWRT(unittest.TestCase):
         device_dict = self.device.to_dict()
 
         self.assertTrue(isinstance(device_dict, dict))
-        self.assertEqual(len(device_dict['interfaces']), len(self.device.get_interfaces()))
+        self.assertEqual(
+            len(device_dict['interfaces']), len(self.device.get_interfaces())
+        )
 
     def test_manufacturer_to_dict(self):
         self.assertIsNotNone(self.device.to_dict()['manufacturer'])

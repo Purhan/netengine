@@ -1,12 +1,13 @@
 try:
     import paramiko
 except ImportError:
-    raise ImportError('paramiko library is not installed, install it with "pip install paramiko"')
+    raise ImportError(
+        'paramiko library is not installed, install it with "pip install paramiko"'
+    )
 
 from netengine.backends import BaseBackend
 from netengine.exceptions import NetEngineError
 from netengine.utils import IfConfig, IwConfig
-
 
 __all__ = ['SSH']
 
@@ -65,10 +66,7 @@ class SSH(BaseBackend):
         shell.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
         shell.connect(
-            self.host,
-            username=self.username,
-            password=self.password,
-            port=self.port
+            self.host, username=self.username, password=self.password, port=self.port
         )
         self.shell = shell
 
@@ -97,7 +95,7 @@ class SSH(BaseBackend):
             return error
         else:
             return '%s\n\n%s' % (output, error)
-    
+
     def iwconfig(self):
         """ iwconfig command converted to netjson """
         output = self.run('iwconfig')

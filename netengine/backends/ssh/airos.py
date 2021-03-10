@@ -2,7 +2,6 @@ from cached_property import cached_property
 
 from netengine.backends.ssh import SSH
 
-
 __all__ = ['AirOS']
 
 
@@ -14,7 +13,7 @@ class AirOS(SSH):
 
     def __str__(self):
         """ print a human readable object description """
-        return u"<SSH (Ubiquity AirOS): %s@%s>" % (self.username, self.host)
+        return "<SSH (Ubiquity AirOS): %s@%s>" % (self.username, self.host)
 
     @cached_property
     def _ubntbox(self):
@@ -75,7 +74,7 @@ class AirOS(SSH):
     @property
     def RAM_total(self):
         return int(self._ubntbox['memTotal'])
-    
+
     @property
     def uptime(self):
         return int(self._ubntbox['uptime'])
@@ -156,7 +155,7 @@ class AirOS(SSH):
                     "mode": self.wireless_mode,
                     "tx_power": self.wireless_output_power,
                     "dbm": self.wireless_dbm,
-                    "noise": self.wireless_noise
+                    "noise": self.wireless_noise,
                 }
                 # merge with iwconfig
                 for wireless_if in wireless_interfaces:
@@ -170,23 +169,22 @@ class AirOS(SSH):
     def _filter_routing_protocols(self):
         results = []
         if self.olsr:
-            results.append(self._dict({
-                "name": "olsr",
-                "version": self.olsr[0]
-            }))
+            results.append(self._dict({"name": "olsr", "version": self.olsr[0]}))
         # other routing protocols
         return results
 
     def to_dict(self):
-        return self._dict({
-            "name": self.name,
-            "type": "radio",
-            "os": self.os[0],
-            "os_version": self.os[1],
-            "manufacturer": "Ubiquiti Networks, INC",
-            "model": self.model,
-            "RAM_total": self.RAM_total,
-            "uptime": self.uptime,
-            "interfaces": self._filter_interfaces(),
-            "routing_protocols": self._filter_routing_protocols()
-        })
+        return self._dict(
+            {
+                "name": self.name,
+                "type": "radio",
+                "os": self.os[0],
+                "os_version": self.os[1],
+                "manufacturer": "Ubiquiti Networks, INC",
+                "model": self.model,
+                "RAM_total": self.RAM_total,
+                "uptime": self.uptime,
+                "interfaces": self._filter_interfaces(),
+                "routing_protocols": self._filter_routing_protocols(),
+            }
+        )

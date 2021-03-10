@@ -1,7 +1,6 @@
 from netengine.backends import BaseBackend
 from netengine.exceptions import NetEngineError
 
-
 __all__ = ['HTTP']
 
 
@@ -9,6 +8,7 @@ class HTTP(BaseBackend):
     """
     HTTP base backend
     """
+
     def __init__(self, host, username, password):
         """
         :host string: required

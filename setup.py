@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup, find_packages
+from setuptools import find_packages, setup
 
 from netengine import get_version
 
@@ -12,7 +12,12 @@ def get_install_requires():
     requirements = []
     for line in open('requirements.txt').readlines():
         # skip to next iteration if comment or empty line
-        if line.startswith('#') or line == '' or line.startswith('http') or line.startswith('git'):
+        if (
+            line.startswith('#')
+            or line == ''
+            or line.startswith('http')
+            or line.startswith('git')
+        ):
             continue
         # add line to requirements
         requirements.append(line)
@@ -41,5 +46,5 @@ setup(
         'Topic :: System :: Networking',
     ],
     scripts=['bin/netengine-utils'],
-    test_suite='nose.collector'
+    test_suite='nose.collector',
 )

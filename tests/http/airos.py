@@ -1,14 +1,13 @@
 import unittest
+
 from netengine.backends.http import AirOS
 
 from ..settings import settings
-
 
 __all__ = ['TestHTTP']
 
 
 class TestHTTP(unittest.TestCase):
-
     def setUp(self):
         self.host = settings['base-http']['host']
         self.username = settings['base-http']['username']

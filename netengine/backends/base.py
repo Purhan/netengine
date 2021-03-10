@@ -1,20 +1,18 @@
 import json
-import netengine
 import os
 
+import netengine
 from netengine.shortcuts import OrderedDict
 from netengine.utils import manufacturer_lookup
 
-
-__all__ = [
-    'BaseBackend'
-]
+__all__ = ['BaseBackend']
 
 
 class BaseBackend(object):
     """
     Base NetEngine Backend
     """
+
     __netengine__ = True
     _dict = OrderedDict
 
@@ -27,7 +25,7 @@ class BaseBackend(object):
 
     def __unicode__(self):
         """ unicode __str__() for python2.7 """
-        return unicode(self.__str__())
+        return str(self.__str__())
 
     def validate(self):
         raise NotImplementedError('Not implemented')

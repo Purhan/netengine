@@ -1,5 +1,5 @@
-from netengine.resources.manufacturers import dictionary
 from netengine.exceptions import NetEngineError
+from netengine.resources.manufacturers import dictionary
 
 
 def manufacturer_lookup(mac_address):
@@ -13,4 +13,6 @@ def manufacturer_lookup(mac_address):
     try:
         return dictionary[key]
     except KeyError:
-        raise NetEngineError("No valid manufacturer found for mac address: %s" % mac_address)
+        raise NetEngineError(
+            "No valid manufacturer found for mac address: %s" % mac_address
+        )

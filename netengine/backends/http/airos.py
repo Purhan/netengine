@@ -10,7 +10,9 @@ import json
 try:
     import mechanize
 except ImportError:
-    raise ImportError('Mechanize library is not installed, install with: "pip install mechanize"')
+    raise ImportError(
+        'Mechanize library is not installed, install with: "pip install mechanize"'
+    )
 
 from netengine.backends.http import HTTP
 
@@ -28,11 +30,13 @@ class AirOS(HTTP):
     def info(self):
         if not self._status_cgi:
             browser = mechanize.Browser()
-            browser.set_handle_robots(False)   # ignore robots
+            browser.set_handle_robots(False)  # ignore robots
             browser.addheaders = [('User-agent', 'Firefox')]
-            response = browser.open("https://{host}/login.cgi?uri=/status.cgi".format(host=self.host))
+            response = browser.open(
+                "https://{host}/login.cgi?uri=/status.cgi".format(host=self.host)
+            )
             browser.form = list(browser.forms())[0]
-            browser.select_form(nr = 0)
+            browser.select_form(nr=0)
             browser.form['username'] = self.username
             browser.form['password'] = self.password
             request = browser.submit()
@@ -46,11 +50,13 @@ class AirOS(HTTP):
     def iflist(self):
         if not self._iflist_cgi:
             browser = mechanize.Browser()
-            browser.set_handle_robots(False)   # ignore robots
+            browser.set_handle_robots(False)  # ignore robots
             browser.addheaders = [('User-agent', 'Firefox')]
-            response = browser.open("https://{host}/login.cgi?uri=/iflist.cgi".format(host=self.host))
+            response = browser.open(
+                "https://{host}/login.cgi?uri=/iflist.cgi".format(host=self.host)
+            )
             browser.form = list(browser.forms())[0]
-            browser.select_form(nr = 0)
+            browser.select_form(nr=0)
             browser.form['username'] = self.username
             browser.form['password'] = self.password
             request = browser.submit()
@@ -64,11 +70,13 @@ class AirOS(HTTP):
     def sta(self):
         if not self._sta_cgi:
             browser = mechanize.Browser()
-            browser.set_handle_robots(False)   # ignore robots
+            browser.set_handle_robots(False)  # ignore robots
             browser.addheaders = [('User-agent', 'Firefox')]
-            response = browser.open("https://{host}/login.cgi?uri=/sta.cgi".format(host=self.host))
+            response = browser.open(
+                "https://{host}/login.cgi?uri=/sta.cgi".format(host=self.host)
+            )
             browser.form = list(browser.forms())[0]
-            browser.select_form(nr = 0)
+            browser.select_form(nr=0)
             browser.form['username'] = self.username
             browser.form['password'] = self.password
             request = browser.submit()
@@ -194,9 +202,9 @@ class AirOS(HTTP):
         allinfo = self.iflist
         dict_interface = {}
         for interface in allinfo["interfaces"]:
-            if "ipv4" in interface.keys():
-                for key, values in interface.iteritems():
-                    dict_interface[key]=values
+            if "ipv4" in list(interface.keys()):
+                for key, values in list(interface.items()):
+                    dict_interface[key] = values
         return dict_interface
 
     @property
@@ -204,34 +212,34 @@ class AirOS(HTTP):
         """ return a list of connected stations """
         results = []
         for stations in self.sta:
-            results.append(self._dict({
-                "station" : stations
-            }))
+            results.append(self._dict({"station": stations}))
         return results
 
     def format_interfaces(self):
         list_of_dictionaries = []
-        interface_list = self.iflist["interfaces"];
+        interface_list = self.iflist["interfaces"]
         for i in range(0, len(interface_list)):
             dictionary = {}
-            if interface_list[i]["ifname"] in self.interface_ip.values():
+            if interface_list[i]["ifname"] in list(self.interface_ip.values()):
                 dictionary[interface_list[i]["ifname"]] = interface_list[i]
                 list_of_dictionaries.append(dictionary)
         return list_of_dictionaries
 
     def to_dict(self):
-        return self._dict({
-            "name": str(self.name),
-            "ssid": str(self.ssid),
-            "type": "radio",
-            "mode": self.mode,
-            "uptime": self.uptime,
-            "uptime_tuple": self.uptime_tuple,
-            "antennas": [],
-            "tx_rate": self.rates[0],
-            "rx_rate": self.rates[1],
-            "interfaces": self.format_interfaces(),
-            "connected_stations": self.connected_stations,
-            "frequency": str(self.frequency),
-            "wireless_dbm": str(self.noisefloor),
-        })
+        return self._dict(
+            {
+                "name": str(self.name),
+                "ssid": str(self.ssid),
+                "type": "radio",
+                "mode": self.mode,
+                "uptime": self.uptime,
+                "uptime_tuple": self.uptime_tuple,
+                "antennas": [],
+                "tx_rate": self.rates[0],
+                "rx_rate": self.rates[1],
+                "interfaces": self.format_interfaces(),
+                "connected_stations": self.connected_stations,
+                "frequency": str(self.frequency),
+                "wireless_dbm": str(self.noisefloor),
+            }
+        )

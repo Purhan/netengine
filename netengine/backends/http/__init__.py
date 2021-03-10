@@ -1,8 +1,4 @@
-from .base import HTTP
 from .airos import AirOS
+from .base import HTTP
 
-
-
-__all__ = [
-    'AirOS'
-]
+__all__ = ['AirOS']

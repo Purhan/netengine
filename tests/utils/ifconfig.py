@@ -1,9 +1,8 @@
-import unittest
 import json
+import unittest
 
 from netengine.shortcuts import OrderedDict
 from netengine.utils.ifconfig import IfConfig
-
 
 __all__ = ['TestIfConfigParser']
 
